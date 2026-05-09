@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zu Storage | Auto-Fit</title>
+    <title>Zu Storage | Perfect Alignment</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -15,11 +15,14 @@
             font-family: 'Inter', sans-serif; 
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* Stack for mobile */
         }
 
-        @media (min-width: 1024px) {
-            body { flex-direction: row; } /* Side-by-side for desktop */
+        /* Perfectly Centered Grid Items */
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
         }
 
         .glass { 
@@ -28,44 +31,40 @@
             border: 1px solid rgba(255, 255, 255, 0.08); 
         }
 
-        /* Fluid Grid System */
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
-        }
-
-        @media (min-width: 640px) {
-            .file-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-                gap: 1.5rem;
-            }
-        }
-
         .file-card {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
-            padding: 1.5rem;
-            border-radius: 20px;
+            align-items: center; /* Center content horizontally */
+            text-align: center; /* Center text */
+            padding: 2rem;
+            border-radius: 24px;
             transition: all 0.3s ease;
             height: 100%;
-            cursor: pointer;
         }
 
         .file-card:hover {
-            background: rgba(59, 130, 246, 0.07);
+            background: rgba(59, 130, 246, 0.05);
             border-color: rgba(59, 130, 246, 0.4);
-            transform: translateY(-4px);
+            transform: translateY(-5px);
         }
 
+        /* Modal Overlay */
         #viewerModal { 
             display: none; 
             position: fixed; 
             inset: 0; 
             z-index: 1000; 
-            background: #000;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 2rem;
+        }
+
+        .viewer-window {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            overflow: hidden;
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
@@ -74,66 +73,74 @@
 </head>
 <body>
 
-    <!-- Responsive Sidebar / Mobile Bottom Nav -->
-    <aside class="w-full lg:w-64 border-b lg:border-r lg:border-b-0 border-white/5 flex lg:flex-col p-4 lg:p-8 order-2 lg:order-1 shrink-0 bg-[#050505]">
-        <div class="hidden lg:flex items-center gap-3 mb-12">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+    <!-- Sidebar: Fixed Width for Alignment -->
+    <aside class="w-64 border-r border-white/5 flex flex-col p-8 hidden lg:flex shrink-0">
+        <div class="flex items-center gap-3 mb-12 justify-center lg:justify-start">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                 <i data-lucide="folder-kanban" class="w-5 h-5 text-white"></i>
             </div>
             <span class="font-bold text-lg tracking-tight">ZU DRIVE</span>
         </div>
         
-        <nav class="flex lg:flex-col w-full justify-around lg:justify-start gap-2">
-            <div class="flex-1 lg:flex-none px-4 py-3 bg-white/5 rounded-xl text-blue-400 flex flex-col lg:flex-row items-center gap-1 lg:gap-3 border border-white/5 transition">
-                <i data-lucide="grid" class="w-5 lg:w-4 h-5 lg:h-4"></i>
-                <span class="text-[10px] lg:text-sm font-medium">Files</span>
+        <nav class="space-y-2">
+            <div class="px-4 py-3 bg-white/5 rounded-xl text-blue-400 flex items-center gap-3 border border-white/5 cursor-default">
+                <i data-lucide="grid" class="w-4 h-4"></i>
+                <span class="text-sm font-medium">Dashboard</span>
             </div>
-            <div class="flex-1 lg:flex-none px-4 py-3 text-zinc-500 hover:text-white flex flex-col lg:flex-row items-center gap-1 lg:gap-3 transition cursor-pointer">
-                <i data-lucide="star" class="w-5 lg:w-4 h-5 lg:h-4"></i>
-                <span class="text-[10px] lg:text-sm font-medium">Starred</span>
-            </div>
-            <div class="flex-1 lg:flex-none px-4 py-3 text-zinc-500 hover:text-white flex flex-col lg:flex-row items-center gap-1 lg:gap-3 transition cursor-pointer">
-                <i data-lucide="settings" class="w-5 lg:w-4 h-5 lg:h-4"></i>
-                <span class="text-[10px] lg:text-sm font-medium">Settings</span>
+            <div class="px-4 py-3 text-zinc-500 hover:text-white transition flex items-center gap-3 cursor-pointer">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <span class="text-sm font-medium">Documents</span>
             </div>
         </nav>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0 order-1 lg:order-2">
-        <!-- Header -->
-        <header class="h-16 lg:h-20 border-b border-white/5 flex items-center justify-between px-6 lg:px-10 shrink-0">
-            <div class="flex items-center gap-2 text-xs lg:text-sm text-zinc-500">
-                <span class="hidden sm:inline">Personal</span>
-                <i data-lucide="chevron-right" class="w-3 h-3 hidden sm:inline"></i>
-                <span class="text-white">Recent Docs</span>
+    <main class="flex-1 flex flex-col min-w-0">
+        <!-- Top Bar: Perfectly Aligned with Main Content -->
+        <header class="h-20 border-b border-white/5 flex items-center justify-between px-10 shrink-0">
+            <div class="flex items-center gap-2 text-sm text-zinc-500">
+                <span>Storage</span>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <span class="text-white">Recent Documents</span>
             </div>
-            <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center">
-                <span class="text-[10px] font-bold text-blue-400">ZD</span>
+            <div class="flex items-center gap-4">
+                <button class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-white/10 transition">
+                    <i data-lucide="bell" class="w-4 h-4 text-zinc-400"></i>
+                </button>
             </div>
         </header>
 
-        <!-- Grid Container -->
-        <div class="flex-1 p-6 lg:p-10 overflow-y-auto custom-scrollbar flex justify-center">
-            <div class="max-w-7xl w-full">
+        <!-- Scrollable Grid Container -->
+        <div class="p-10 overflow-y-auto custom-scrollbar flex justify-center">
+            <div class="max-w-7xl w-full"> <!-- Constraints width for better readability -->
+                
                 <div class="file-grid">
                     
                     <!-- File 1 -->
-                    <div onclick="smartView('sn.pdf')" class="file-card glass group">
-                        <div class="w-12 h-12 lg:w-16 lg:h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:bg-blue-500/20 transition-colors">
-                            <i data-lucide="file-text" class="text-blue-500 w-6 h-6 lg:w-8 lg:h-8"></i>
+                    <div onclick="smartView('sn.docx')" class="file-card glass group">
+                        <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-500/20 transition-colors">
+                            <i data-lucide="file-text" class="text-blue-500 w-8 h-8"></i>
                         </div>
-                        <h3 class="font-medium text-xs lg:text-[15px] text-zinc-200 truncate w-full">Speaker Notes</h3>
-                        <p class="text-[9px] text-zinc-600 mt-1 uppercase">DOCX</p>
+                        <h3 class="font-medium text-[15px] text-zinc-200 truncate w-full">Speaker Notes</h3>
+                        <p class="text-[10px] text-zinc-600 mt-2 tracking-widest uppercase">Word Document</p>
                     </div>
 
                     <!-- File 2 -->
-                    <div onclick="smartView('GE_Medical ethics.pdf')" class="file-card glass group">
-                        <div class="w-12 h-12 lg:w-16 lg:h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-4 lg:mb-6 group-hover:bg-orange-500/20 transition-colors">
-                            <i data-lucide="presentation" class="text-orange-500 w-6 h-6 lg:w-8 lg:h-8"></i>
+                    <div onclick="smartView('GE_Medical ethics.pptx')" class="file-card glass group">
+                        <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-orange-500/20 transition-colors">
+                            <i data-lucide="presentation" class="text-orange-500 w-8 h-8"></i>
                         </div>
-                        <h3 class="font-medium text-xs lg:text-[15px] text-zinc-200 truncate w-full">Medical Ethics</h3>
-                        <p class="text-[9px] text-zinc-600 mt-1 uppercase">PPTX</p>
+                        <h3 class="font-medium text-[15px] text-zinc-200 truncate w-full">Medical Ethics</h3>
+                        <p class="text-[10px] text-zinc-600 mt-2 tracking-widest uppercase">PowerPoint</p>
+                    </div>
+
+                    <!-- File 3 -->
+                    <div onclick="smartView('lab_report.pdf')" class="file-card glass group">
+                        <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                            <i data-lucide="file-digit" class="text-red-500 w-8 h-8"></i>
+                        </div>
+                        <h3 class="font-medium text-[15px] text-zinc-200 truncate w-full">Lab Report</h3>
+                        <p class="text-[10px] text-zinc-600 mt-2 tracking-widest uppercase">PDF Archive</p>
                     </div>
 
                 </div>
@@ -141,17 +148,22 @@
         </div>
     </main>
 
-    <!-- FULLSCREEN MODAL VIEWER (Now with Responsive Controls) -->
+    <!-- FULLSCREEN MODAL VIEWER -->
     <div id="viewerModal">
-        <div class="h-full flex flex-col overflow-hidden">
-            <div class="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-black">
-                <span id="vFileName" class="text-xs font-medium truncate max-w-[50%]">File Preview</span>
-                <button onclick="closeViewer()" class="text-zinc-500 hover:text-white flex items-center gap-2">
-                    <span class="text-[10px] font-bold">CLOSE</span>
+        <div class="viewer-window glass flex flex-col shadow-2xl">
+            <!-- Modal Header -->
+            <div class="h-16 border-b border-white/5 flex items-center justify-between px-8 bg-black/20">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="eye" class="w-4 h-4 text-blue-500"></i>
+                    <span id="vFileName" class="text-sm font-medium truncate max-w-xs">File Preview</span>
+                </div>
+                <button onclick="closeViewer()" class="text-zinc-500 hover:text-white flex items-center gap-2 transition">
+                    <span class="text-xs font-bold uppercase tracking-tighter">Close</span>
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
-            <div class="flex-1 bg-[#111]">
+            <!-- Iframe Container -->
+            <div class="flex-1 bg-[#111] relative">
                 <iframe id="vFrame" src="" class="w-full h-full border-none"></iframe>
             </div>
         </div>
@@ -171,6 +183,7 @@
             if (ext === 'pdf') {
                 frame.src = file;
             } else {
+                // Constructing the full URL for the external viewer
                 const absoluteUrl = window.location.origin + '/' + file;
                 frame.src = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteUrl)}`;
             }
@@ -179,8 +192,10 @@
         }
 
         function closeViewer() {
-            document.getElementById('viewerModal').style.display = 'none';
-            document.getElementById('vFrame').src = "";
+            const modal = document.getElementById('viewerModal');
+            const frame = document.getElementById('vFrame');
+            modal.style.display = 'none';
+            frame.src = "";
         }
 
         window.onkeydown = (e) => { if (e.key === "Escape") closeViewer(); };
