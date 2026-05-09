@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zu Vault | PDF Library</title>
+    <title>Zu Vault | Full Functionality</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -18,14 +18,12 @@
             height: 100vh;
         }
 
-        /* High-end glass effect */
         .glass { 
             background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(20px); 
+            backdrop-filter: blur(25px); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
         }
 
-        /* Perfect Grid */
         .file-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -54,7 +52,7 @@
             transform: translateY(-8px);
         }
 
-        /* Fullscreen Viewport for PDF */
+        /* Fully Workable Viewer */
         #pdfViewer { 
             display: none; 
             position: fixed; 
@@ -64,14 +62,32 @@
             flex-direction: column;
         }
 
+        .viewer-header {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: #050505;
+        }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        .btn-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
     </style>
 </head>
 <body>
@@ -79,49 +95,46 @@
     <!-- Sidebar -->
     <aside class="w-72 border-r border-white/5 flex flex-col p-10 hidden lg:flex shrink-0">
         <div class="flex items-center gap-3 mb-16">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.2)]">
-                <i data-lucide="file-text" class="w-5 h-5 text-white"></i>
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+                <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
             </div>
-            <span class="font-bold text-lg tracking-tight uppercase">Zu Vault</span>
+            <span class="font-bold text-lg tracking-tighter">ZU VAULT</span>
         </div>
         
         <nav class="space-y-2">
-            <div class="px-5 py-3 bg-white/5 rounded-2xl text-blue-400 flex items-center gap-3 border border-white/10">
-                <i data-lucide="layout-grid" class="w-4 h-4"></i>
-                <span class="text-sm font-medium tracking-tight">Medical Library</span>
+            <div class="px-5 py-3.5 bg-blue-600/10 rounded-2xl text-blue-400 flex items-center gap-3 border border-blue-500/20">
+                <i data-lucide="layout" class="w-4 h-4"></i>
+                <span class="text-sm font-semibold">Repository</span>
             </div>
         </nav>
     </aside>
 
     <!-- Main -->
-    <main class="flex-1 flex flex-col min-w-0 bg-[#080808]">
-        <header class="h-24 border-b border-white/5 flex items-center justify-between px-12 shrink-0">
-            <h2 class="text-lg font-medium tracking-tight">Recent Resources</h2>
-            <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
-                <i data-lucide="user" class="w-4 h-4 text-zinc-500"></i>
-            </div>
+    <main class="flex-1 flex flex-col min-w-0">
+        <header class="h-24 border-b border-white/5 flex items-center justify-between px-10 shrink-0">
+            <h2 class="text-xl font-medium tracking-tight">Recent Resources</h2>
         </header>
 
-        <div class="flex-1 p-10 lg:p-14 overflow-y-auto custom-scrollbar flex justify-center">
+        <div class="flex-1 p-10 overflow-y-auto flex justify-center">
             <div class="max-w-6xl w-full">
                 <div class="file-grid">
                     
-                    <!-- PDF: Speaker Notes -->
-                    <div onclick="openPDF('sn.pdf')" class="file-card glass group">
-                        <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                    <!-- File 1 -->
+                    <div onclick="openVault('sn.pdf', 'Speaker Notes')" class="file-card glass group">
+                        <div class="w-16 h-16 bg-red-500/10 rounded-3xl flex items-center justify-center mb-5 group-hover:bg-red-500/20 transition-colors">
                             <i data-lucide="file-text" class="text-red-500 w-8 h-8"></i>
                         </div>
                         <h3 class="font-medium text-sm text-zinc-100 px-4 truncate w-full text-center">Speaker Notes</h3>
-                        <p class="text-[10px] text-zinc-600 mt-2 font-bold uppercase tracking-widest">Click to Read</p>
+                        <p class="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-widest">Open Reader</p>
                     </div>
 
-                    <!-- PDF: Medical Ethics -->
-                    <div onclick="openPDF('GE_Medical ethics.pdf')" class="file-card glass group">
-                        <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-red-500/20 transition-colors">
+                    <!-- File 2 -->
+                    <div onclick="openVault('GE_Medical ethics.pdf', 'Medical Ethics')" class="file-card glass group">
+                        <div class="w-16 h-16 bg-red-500/10 rounded-3xl flex items-center justify-center mb-5 group-hover:bg-red-500/20 transition-colors">
                             <i data-lucide="file-text" class="text-red-500 w-8 h-8"></i>
                         </div>
                         <h3 class="font-medium text-sm text-zinc-100 px-4 truncate w-full text-center">Medical Ethics</h3>
-                        <p class="text-[10px] text-zinc-600 mt-2 font-bold uppercase tracking-widest">Click to Read</p>
+                        <p class="text-[10px] text-zinc-500 mt-2 font-bold uppercase tracking-widest">Open Reader</p>
                     </div>
 
                 </div>
@@ -129,49 +142,66 @@
         </div>
     </main>
 
-    <!-- FULLSCREEN PDF VIEWER -->
+    <!-- WORKABLE PDF VIEWER -->
     <div id="pdfViewer">
-        <div class="h-16 flex items-center justify-between px-8 border-b border-white/10 glass">
-            <div class="flex items-center gap-3">
-                <i data-lucide="eye" class="w-4 h-4 text-blue-500"></i>
-                <span id="pdfName" class="text-sm font-medium text-zinc-300">File Preview</span>
+        <div class="viewer-header">
+            <div class="flex flex-col">
+                <span id="vFileTitle" class="text-sm font-semibold text-white tracking-tight">Document Preview</span>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-widest">Secure View Mode</span>
             </div>
-            <button onclick="closePDF()" class="flex items-center gap-2 text-zinc-500 hover:text-white transition">
-                <span class="text-[10px] font-bold">CLOSE VAULT</span>
-                <i data-lucide="x-circle" class="w-6 h-6"></i>
-            </button>
+
+            <div class="flex items-center gap-4">
+                <!-- DOWNLOAD BUTTON -->
+                <a id="vDownloadLink" href="#" download class="btn-action bg-white/5 hover:bg-white/10 text-zinc-300">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>DOWNLOAD</span>
+                </a>
+
+                <!-- CLOSE BUTTON -->
+                <button onclick="closeVault()" class="btn-action bg-red-600 hover:bg-red-700 text-white shadow-lg shadow-red-900/20">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                    <span>CLOSE</span>
+                </button>
+            </div>
         </div>
-        <div class="flex-1">
-            <!-- Loading PDF directly into iframe -->
-            <iframe id="pdfFrame" src=""></iframe>
+        
+        <div class="flex-1 bg-[#111]">
+            <iframe id="vFrame" src="" class="w-full h-full"></iframe>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function openPDF(path) {
+        function openVault(filePath, fileName) {
             const viewer = document.getElementById('pdfViewer');
-            const frame = document.getElementById('pdfFrame');
-            const title = document.getElementById('pdfName');
+            const frame = document.getElementById('vFrame');
+            const title = document.getElementById('vFileTitle');
+            const downloadBtn = document.getElementById('vDownloadLink');
 
-            title.innerText = path;
-            // Native browsers support #view=FitH to open the PDF zoomed to width
-            frame.src = path + "#view=FitH";
+            // 1. Set the Title
+            title.innerText = fileName;
+
+            // 2. Set the Download Link
+            downloadBtn.href = filePath;
+
+            // 3. Open PDF in frame (using browser native viewer)
+            // #view=FitH ensures the PDF fits the width of the screen immediately
+            frame.src = filePath + "#view=FitH";
             
             viewer.style.display = 'flex';
         }
 
-        function closePDF() {
+        function closeVault() {
             const viewer = document.getElementById('pdfViewer');
-            const frame = document.getElementById('pdfFrame');
+            const frame = document.getElementById('vFrame');
             
             viewer.style.display = 'none';
-            frame.src = ""; // Clears the memory
+            frame.src = ""; // Flush memory
         }
 
-        // Close on Esc key
-        window.onkeydown = (e) => { if (e.key === "Escape") closePDF(); };
+        // Close on 'Esc' key
+        window.onkeydown = (e) => { if (e.key === "Escape") closeVault(); };
     </script>
 </body>
 </html>
