@@ -3,112 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Drive | Minimal</title>
+    <title>Personal Drive | Minimal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .file-card:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-2px); transition: all 0.2s ease; }
+        body { 
+            background-color: #050505; 
+            color: #e5e5e5; 
+            font-family: 'Inter', sans-serif; 
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .file-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .file-card:hover { 
+            background: rgba(255, 255, 255, 0.08); 
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="w-64 border-r border-white/5 flex flex-col p-6 hidden md:flex">
-        <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <i data-lucide="hard-drive" class="w-5 h-5 text-white"></i>
+    <aside class="w-72 border-r border-white/5 flex flex-col p-8 hidden md:flex">
+        <div class="flex items-center gap-3 mb-12">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-900/20">
+                <i data-lucide="folder-closed" class="w-5 h-5 text-white"></i>
             </div>
-            <span class="font-bold tracking-tight">STORAGE</span>
+            <span class="font-semibold text-lg tracking-tight">CloudSpace</span>
         </div>
         
-        <nav class="space-y-2 flex-1">
-            <a href="#" class="flex items-center gap-3 px-3 py-2 bg-white/5 rounded-lg text-blue-400">
-                <i data-lucide="folder" class="w-4 h-4"></i> All Files
+        <nav class="space-y-1.5 flex-1">
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-white/5 rounded-xl text-blue-400 border border-white/5">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i> Dashboard
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg transition">
-                <i data-lucide="file-text" class="w-4 h-4"></i> Documents
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition text-zinc-400 hover:text-white">
+                <i data-lucide="file-text" class="w-4 h-4"></i> PDF Documents
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg transition">
-                <i data-lucide="presentation" class="w-4 h-4"></i> Presentations
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition text-zinc-400 hover:text-white">
+                <i data-lucide="presentation" class="w-4 h-4"></i> Slides & PPTX
             </a>
-            <a href="#" class="flex items-center gap-3 px-3 py-2 hover:bg-white/5 rounded-lg transition">
-                <i data-lucide="clock" class="w-4 h-4"></i> Recent
+            <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 rounded-xl transition text-zinc-400 hover:text-white">
+                <i data-lucide="star" class="w-4 h-4"></i> Favorites
             </a>
         </nav>
 
-        <div class="mt-auto p-4 glass rounded-xl">
-            <p class="text-xs text-zinc-500 mb-2">Used 12.4 GB of 50 GB</p>
-            <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                <div class="bg-blue-600 h-full w-1/4"></div>
+        <div class="mt-auto p-5 glass rounded-2xl">
+            <div class="flex justify-between text-xs text-zinc-500 mb-3">
+                <span>Storage Used</span>
+                <span class="text-zinc-300">72%</span>
+            </div>
+            <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-blue-500 h-full w-[72%]"></div>
             </div>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col">
-        <!-- Header -->
-        <header class="h-16 border-b border-white/5 flex items-center justify-between px-8">
-            <div class="relative w-96">
-                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
-                <input type="text" placeholder="Search files..." class="w-full bg-white/5 border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-sm focus:outline-none focus:border-blue-500/50 transition">
+    <main class="flex-1 flex flex-col overflow-hidden">
+        
+        <!-- Top Bar -->
+        <header class="h-20 border-b border-white/5 flex items-center justify-between px-10 shrink-0">
+            <div class="relative w-full max-w-md">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
+                <input type="text" placeholder="Search your library..." class="w-full bg-white/5 border border-white/10 rounded-xl py-2.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition">
             </div>
             <div class="flex items-center gap-4">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition">
-                    Upload New
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Upload
                 </button>
             </div>
         </header>
 
-        <!-- Grid -->
-        <section class="p-8 overflow-y-auto">
-            <h2 class="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-6">Recent Documents</h2>
+        <!-- File View -->
+        <section class="p-10 overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-xl font-medium tracking-tight">Recent Files</h2>
+                <div class="flex bg-white/5 rounded-lg p-1">
+                    <button class="p-1.5 bg-white/10 rounded-md shadow-sm"><i data-lucide="grid-3x3" class="w-4 h-4"></i></button>
+                    <button class="p-1.5 text-zinc-500"><i data-lucide="list" class="w-4 h-4"></i></button>
+                </div>
+            </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                 
-                <!-- PDF File -->
-                <div class="file-card glass p-4 rounded-2xl cursor-pointer">
-                    <div class="w-12 h-12 bg-red-500/10 rounded-xl flex items-center justify-center mb-4">
-                        <i data-lucide="file-text" class="text-red-500"></i>
+                <!-- PDF: Opens in new tab -->
+                <a href="sn.pdf" target="_blank" class="file-card glass p-5 rounded-3xl block group">
+                    <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-red-500/20 transition-colors">
+                        <i data-lucide="file-text" class="text-red-500 w-7 h-7"></i>
                     </div>
-                    <h3 class="font-medium text-sm truncate">Annual_Report_2024.pdf</h3>
-                    <p class="text-xs text-zinc-500 mt-1">2.4 MB • 2 hours ago</p>
-                </div>
+                    <h3 class="font-medium text-[15px] truncate text-zinc-200">Speaker Notes.pdf</h3>
+                    <p class="text-xs text-zinc-500 mt-1.5 flex items-center gap-1.5">
+                        <span class="w-1 h-1 rounded-full bg-red-500"></span> View PDF
+                    </p>
+                </a>
 
-                <!-- PPTX File -->
-                <div class="file-card glass p-4 rounded-2xl cursor-pointer">
-                    <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
-                        <i data-lucide="presentation" class="text-orange-500"></i>
+                <!-- PPTX: Microsoft Online Viewer (requires public URL) -->
+                <a href="GE_Medical ethics.pptx" target="_blank" class="file-card glass p-5 rounded-3xl block group">
+                    <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
+                        <i data-lucide="presentation" class="text-orange-500 w-7 h-7"></i>
                     </div>
-                    <h3 class="font-medium text-sm truncate">Project_Pitch.pptx</h3>
-                    <p class="text-xs text-zinc-500 mt-1">15.8 MB • Yesterday</p>
-                </div>
-
-                <!-- Doc File -->
-                <div class="file-card glass p-4 rounded-2xl cursor-pointer">
-                    <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
-                        <i data-lucide="file" class="text-blue-500"></i>
-                    </div>
-                    <h3 class="font-medium text-sm truncate">Tech_Stack_Proposal.docx</h3>
-                    <p class="text-xs text-zinc-500 mt-1">842 KB • 3 days ago</p>
-                </div>
-
-                <!-- Generic File -->
-                <div class="file-card glass p-4 rounded-2xl cursor-pointer">
-                    <div class="w-12 h-12 bg-zinc-500/10 rounded-xl flex items-center justify-center mb-4">
-                        <i data-lucide="file-code" class="text-zinc-400"></i>
-                    </div>
-                    <h3 class="font-medium text-sm truncate">index.html</h3>
-                    <p class="text-xs text-zinc-500 mt-1">12 KB • 1 week ago</p>
-                </div>
+                    <h3 class="font-medium text-[15px] truncate text-zinc-200">medical ethics(GE).pptx</h3>
+                    <p class="text-xs text-zinc-500 mt-1.5 flex items-center gap-1.5">
+                        <span class="w-1 h-1 rounded-full bg-orange-500"></span> Open Slides
+                    </p>
+                </a>
 
             </div>
         </section>
     </main>
 
     <script>
-        // Initialize Lucide Icons
+        // Start Lucide Icons
         lucide.createIcons();
     </script>
 </body>
