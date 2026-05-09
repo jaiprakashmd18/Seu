@@ -3,128 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Drive | Zero-Config</title>
+    <title>Zu Storage | Minimal OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #050505; color: #e5e5e5; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .file-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .file-card:hover { background: rgba(255, 255, 255, 0.07); transform: translateY(-5px); border-color: rgba(59, 130, 246, 0.4); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
         
-        #previewModal { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); }
-        .viewer-box { width: 95%; height: 88%; margin: 1.5% auto; border-radius: 20px; overflow: hidden; background: #111; border: 1px solid rgba(255,255,255,0.1); }
+        body { 
+            background-color: #050505; 
+            color: #fafafa; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden;
+        }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+
+        .file-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .file-card:hover {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        #viewerModal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.95);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body class="flex h-screen">
 
     <!-- Sidebar -->
-    <aside class="w-64 border-r border-white/5 flex flex-col p-8 hidden lg:flex shrink-0">
-        <div class="flex items-center gap-3 mb-12">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i data-lucide="database" class="w-5 h-5 text-white"></i>
+    <aside class="w-72 border-r border-white/5 flex flex-col p-8 hidden xl:flex shrink-0">
+        <div class="flex items-center gap-4 mb-12">
+            <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                <i data-lucide="layers" class="w-6 h-6 text-white"></i>
             </div>
-            <span class="font-semibold text-lg">MyStorage</span>
+            <div>
+                <h1 class="font-bold text-lg tracking-tight leading-none">ZU DRIVE</h1>
+                <span class="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">Workspace v1.0</span>
+            </div>
         </div>
-        <nav class="space-y-2">
-            <div class="px-4 py-2 bg-blue-500/10 text-blue-400 rounded-xl flex items-center gap-3 border border-blue-500/20">
-                <i data-lucide="layout" class="w-4 h-4"></i> Overview
+        
+        <nav class="space-y-2 flex-1">
+            <div class="px-5 py-3 bg-white/5 rounded-2xl text-blue-400 flex items-center gap-3 border border-white/5">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                <span class="text-sm font-medium">All Files</span>
             </div>
-            <div class="px-4 py-2 text-zinc-500 hover:text-white transition flex items-center gap-3">
-                <i data-lucide="file" class="w-4 h-4"></i> Documents
+            <div class="px-5 py-3 text-zinc-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                <span class="text-sm font-medium">Documents</span>
+            </div>
+            <div class="px-5 py-3 text-zinc-500 hover:text-white transition-all flex items-center gap-3 cursor-pointer">
+                <i data-lucide="presentation" class="w-4 h-4"></i>
+                <span class="text-sm font-medium">Presentations</span>
             </div>
         </nav>
+
+        <div class="mt-auto glass p-6 rounded-3xl">
+            <div class="flex items-center gap-2 mb-4">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i>
+                <span class="text-[11px] font-semibold text-emerald-500">ENCRYPTED</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">Storage synced with Zara Datacenter Ecosystem.</p>
+        </div>
     </aside>
 
-    <!-- Content -->
-    <main class="flex-1 flex flex-col">
-        <header class="h-20 border-b border-white/5 flex items-center px-10 justify-between">
-            <h1 class="text-zinc-400 text-sm font-medium">Personal / <span class="text-white">Recent Files</span></h1>
+    <!-- Main -->
+    <main class="flex-1 flex flex-col min-w-0 bg-[#080808]">
+        <header class="h-24 border-b border-white/5 flex items-center justify-between px-12 shrink-0">
+            <div class="relative w-full max-w-lg">
+                <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"></i>
+                <input type="text" placeholder="Search resources..." class="w-full bg-white/[0.03] border border-white/5 rounded-2xl py-3.5 pl-14 pr-6 text-sm focus:outline-none focus:border-blue-500/30 transition-all">
+            </div>
         </header>
 
-        <section class="p-10 overflow-y-auto">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <section class="p-12 overflow-y-auto custom-scrollbar">
+            <h2 class="text-2xl font-semibold mb-10 tracking-tight">Recent Activity</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
                 
-                <!-- Card: DOCX -->
-                <div onclick="openViewer('sn.docx')" class="file-card glass p-6 rounded-3xl group">
-                    <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-500/20 transition-colors">
-                        <i data-lucide="file-text" class="text-blue-500 w-7 h-7"></i>
+                <!-- FILE: Word -->
+                <div onclick="smartView('sn.docx')" class="file-card glass p-8 rounded-[32px] cursor-pointer">
+                    <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6">
+                        <i data-lucide="file-text" class="text-blue-500 w-8 h-8"></i>
                     </div>
-                    <h3 class="font-medium text-[15px] truncate">Speaker Notes.docx</h3>
-                    <p class="text-[10px] text-zinc-500 mt-2 uppercase tracking-widest">Open Reader</p>
+                    <h3 class="font-semibold text-lg truncate">Speaker Notes</h3>
+                    <p class="text-xs text-zinc-500 mt-2">DOCX • Microsoft Word</p>
                 </div>
 
-                <!-- Card: PPTX -->
-                <div onclick="openViewer('GE_Medical ethics.pptx')" class="file-card glass p-6 rounded-3xl group">
-                    <div class="w-14 h-14 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-orange-500/20 transition-colors">
-                        <i data-lucide="presentation" class="text-orange-500 w-7 h-7"></i>
+                <!-- FILE: PPTX -->
+                <div onclick="smartView('GE_Medical ethics.pptx')" class="file-card glass p-8 rounded-[32px] cursor-pointer">
+                    <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center mb-6">
+                        <i data-lucide="presentation" class="text-orange-500 w-8 h-8"></i>
                     </div>
-                    <h3 class="font-medium text-[15px] truncate">Medical ethics.pptx</h3>
-                    <p class="text-[10px] text-zinc-500 mt-2 uppercase tracking-widest">View Slides</p>
+                    <h3 class="font-semibold text-lg truncate">Medical Ethics</h3>
+                    <p class="text-xs text-zinc-500 mt-2">PPTX • PowerPoint</p>
                 </div>
 
-                <!-- Card: PDF (Always works best) -->
-                <div onclick="openViewer('sample.pdf')" class="file-card glass p-6 rounded-3xl group">
-                    <div class="w-14 h-14 bg-red-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-red-500/20 transition-colors">
-                        <i data-lucide="file-digit" class="text-red-500 w-7 h-7"></i>
+                <!-- FILE: PDF (Example) -->
+                <div onclick="smartView('syllabus.pdf')" class="file-card glass p-8 rounded-[32px] cursor-pointer">
+                    <div class="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-6">
+                        <i data-lucide="file-check" class="text-red-500 w-8 h-8"></i>
                     </div>
-                    <h3 class="font-medium text-[15px] truncate">Manual.pdf</h3>
-                    <p class="text-[10px] text-zinc-500 mt-2 uppercase tracking-widest">Preview PDF</p>
+                    <h3 class="font-semibold text-lg truncate">Syllabus_2026</h3>
+                    <p class="text-xs text-zinc-500 mt-2">PDF • Document</p>
                 </div>
 
             </div>
         </section>
     </main>
 
-    <!-- THE VIEWER MODAL -->
-    <div id="previewModal">
-        <div class="flex items-center justify-between px-10 py-5">
-            <div class="flex items-center gap-3">
-                <i data-lucide="eye" class="text-blue-500 w-4 h-4"></i>
-                <span id="vTitle" class="text-sm font-medium">Previewing File</span>
+    <!-- FULLSCREEN MODAL VIEWER -->
+    <div id="viewerModal" class="flex flex-col">
+        <div class="h-20 flex items-center justify-between px-12 border-b border-white/10 glass">
+            <div class="flex items-center gap-4">
+                <i data-lucide="eye" class="text-blue-500"></i>
+                <span id="vFileName" class="font-medium tracking-tight">File Preview</span>
             </div>
-            <button onclick="closeViewer()" class="text-zinc-500 hover:text-white flex items-center gap-2 transition">
-                <span class="text-xs">Esc to Close</span>
-                <i data-lucide="circle-x" class="w-6 h-6"></i>
-            </button>
+            <div class="flex items-center gap-6">
+                <a id="vDownloadBtn" href="#" download class="text-xs font-semibold bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl transition-all">Download Copy</a>
+                <button onclick="closeViewer()" class="text-zinc-400 hover:text-white transition-all flex items-center gap-2">
+                    <span class="text-xs font-bold">CLOSE</span>
+                    <i data-lucide="x-circle" class="w-6 h-6"></i>
+                </button>
+            </div>
         </div>
-        <div class="viewer-box">
-            <iframe id="vFrame" src="" class="w-full h-full border-none"></iframe>
+        <div class="flex-1 p-8">
+            <div class="w-full h-full rounded-3xl overflow-hidden glass shadow-2xl relative">
+                <!-- Loading Indicator -->
+                <div id="vLoader" class="absolute inset-0 flex items-center justify-center bg-black/50 z-[-1]">
+                    <p class="text-sm text-zinc-500 animate-pulse">Initializing Secure Viewer...</p>
+                </div>
+                <iframe id="vFrame" src="" class="w-full h-full border-none"></iframe>
+            </div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        function openViewer(file) {
-            const modal = document.getElementById('previewModal');
+        function smartView(file) {
+            const modal = document.getElementById('viewerModal');
             const frame = document.getElementById('vFrame');
-            const title = document.getElementById('vTitle');
+            const nameLabel = document.getElementById('vFileName');
+            const downloadBtn = document.getElementById('vDownloadBtn');
             
-            title.innerText = file;
+            nameLabel.innerText = file;
+            downloadBtn.href = file;
+            
             const ext = file.split('.').pop().toLowerCase();
             
-            // Logic: If PDF, open directly. If Office, use Microsoft Online Viewer.
+            // ROUTING LOGIC
             if (ext === 'pdf') {
+                // PDFs work perfectly offline and online
                 frame.src = file;
+            } else if (['docx', 'pptx', 'xlsx'].includes(ext)) {
+                // Office Files require a remote engine. 
+                // Microsoft's Viewer is usually more robust than Google's.
+                const absoluteUrl = window.location.origin + '/' + file;
+                frame.src = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(absoluteUrl)}`;
             } else {
-                // To test this locally, the file must eventually be on a real URL.
-                // For now, it will attempt to use Microsoft's engine.
-                const fullUrl = encodeURIComponent(window.location.origin + '/' + file);
-                frame.src = `https://view.officeapps.live.com/op/view.aspx?src=${fullUrl}`;
+                // Images or other web files
+                frame.src = file;
             }
 
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
         }
 
         function closeViewer() {
-            const modal = document.getElementById('previewModal');
+            const modal = document.getElementById('viewerModal');
             const frame = document.getElementById('vFrame');
             modal.style.display = 'none';
-            frame.src = "";
+            frame.src = ""; // Clear src to stop memory usage
         }
 
+        // Close on 'Esc'
         window.onkeydown = (e) => { if (e.key === "Escape") closeViewer(); };
     </script>
 </body>
